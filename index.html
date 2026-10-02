@@ -3,177 +3,180 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>偏硬币下注</title>
+<title>交易性格测试</title>
 <style>
 :root{
-  --paper:#E8EFDC; --grid:#D6E2C8; --ink:#1D2840; --muted:#56624F; --brass:#B07D24; --brass-hi:#E2B862;
-  --gain:#2E6A3B; --loss:#A8392C; --card:#F5F8EF; --line:#BCCDA8;
-  color-scheme:light;
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
+  --paper:#E8EFDC; --grid:#D6E2C8; --ink:#1D2840; --muted:#56624F; --accent:#B07D24; --accent-hi:#E2B862;
+  --card:#F5F8EF; --line:#BCCDA8; --a:#4D7C8A; --b:#2E6A3B; --c:#A8392C; --d:#8A5FA8; --err:#A8392C;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#121812; --grid:#1C261C; --ink:#E3EBDC; --muted:#9DAA96; --brass:#D2A04A; --brass-hi:#F0C878;
-    --gain:#82C48F; --loss:#E8836F; --card:#1A221A; --line:#334233; color-scheme:dark;
+    --paper:#121812; --grid:#1C261C; --ink:#E3EBDC; --muted:#9DAA96; --accent:#D2A04A; --accent-hi:#F0C878;
+    --card:#1A221A; --line:#334233; --a:#7FB3C2; --b:#82C48F; --c:#E8836F; --d:#C29BE0; --err:#E8836F; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#121812; --grid:#1C261C; --ink:#E3EBDC; --muted:#9DAA96; --brass:#D2A04A; --brass-hi:#F0C878;
-  --gain:#82C48F; --loss:#E8836F; --card:#1A221A; --line:#334233; color-scheme:dark;
+  --paper:#121812; --grid:#1C261C; --ink:#E3EBDC; --muted:#9DAA96; --accent:#D2A04A; --accent-hi:#F0C878;
+  --card:#1A221A; --line:#334233; --a:#7FB3C2; --b:#82C48F; --c:#E8836F; --d:#C29BE0; --err:#E8836F; color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{
-  margin:0; color:var(--ink); background-color:var(--paper);
+body{margin:0;color:var(--ink);background-color:var(--paper);
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:22px 22px;
-  font-family:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
-  line-height:1.6;
-}
-.num{font-family:"SF Pro Rounded","PingFang SC","Helvetica Neue",system-ui,sans-serif;font-variant-numeric:tabular-nums}
-main{max-width:460px;margin:0 auto;padding:20px 16px 36px}
-h1{font-size:1.55rem;margin:0 0 4px;font-weight:700;letter-spacing:.02em}
+  background-size:22px 22px;font-family:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.65}
+main{max-width:480px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.6rem;margin:0 0 4px;letter-spacing:.02em}
 .lede{margin:0 0 16px;color:var(--muted);font-size:.95rem}
-.board{background:var(--card);border:1.5px solid var(--ink);border-radius:16px;padding:16px}
-.top{display:flex;align-items:center;gap:16px}
-.coin{width:86px;height:86px;flex:none;perspective:420px}
-.coin-inner{
-  width:100%;height:100%;border-radius:50%;
-  background:radial-gradient(circle at 34% 30%,var(--brass-hi),var(--brass) 72%);
-  border:3px solid var(--ink);display:grid;place-items:center;
-  font-size:1.5rem;font-weight:700;color:#1D2840;
-}
-.bank-label{font-size:.85rem;color:var(--muted)}
-.bank{font-size:2.7rem;font-weight:700;line-height:1.05}
-.meta{font-size:.85rem;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
-.last.gain{color:var(--gain)} .last.loss{color:var(--loss)}
-svg.chart{display:block;width:100%;height:auto;margin:14px 0 4px;overflow:visible}
-svg .g{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
-svg .base{stroke:var(--ink);stroke-width:1}
-svg .p-you{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
-svg .ax{fill:var(--muted);font-size:9px}
-label{display:block;font-size:.9rem;margin:10px 0 6px}
-.amt{display:flex;align-items:center;border:1.5px solid var(--ink);border-radius:10px;background:var(--paper);overflow:hidden}
-.amt span{padding:0 4px 0 12px;font-weight:700;font-size:1.3rem}
-.amt input{flex:1;border:0;background:transparent;color:var(--ink);font-size:1.3rem;padding:10px 10px 10px 2px;min-width:0}
-.chips{display:flex;gap:6px;margin:8px 0 12px}
-.chips button{flex:1 1 0;min-width:0;padding:8px 0;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;font-size:.9rem}
-.bets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.bets button{padding:14px 0;border-radius:12px;border:1.5px solid var(--ink);font-size:1.05rem;font-weight:700}
-#betH{background:var(--ink);color:var(--card)}
-#betT{background:transparent;color:var(--ink)}
-button{cursor:pointer;font-family:inherit}
-button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
-.err{color:var(--loss);font-size:.85rem;min-height:1.4em;margin:6px 0 0}
-.result h2{font-size:1.15rem;margin:14px 0 6px}
-.result table{width:100%;border-collapse:collapse;font-size:.95rem}
-.result td{padding:7px 0;border-bottom:1px solid var(--line)}
-.result td:last-child{text-align:right;font-weight:700}
-.lesson{margin:12px 0 14px;font-size:.95rem}
-.primary{width:100%;padding:13px 0;border-radius:12px;border:1.5px solid var(--ink);background:var(--brass);color:#1D2840;font-size:1rem;font-weight:700}
-.gate h2{font-size:1.15rem;margin:0 0 6px}
-.gate p{margin:0 0 12px;font-size:.92rem;color:var(--muted)}
-.gate input{width:100%;border:1.5px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink);font-size:1.25rem;padding:10px 12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
-details{margin-top:18px;font-size:.92rem;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px}
-summary{cursor:pointer;font-weight:700}
-details p{margin:8px 0}
-.history{margin-top:18px;font-size:.88rem}
-.history h3{font-size:.95rem;margin:0 0 6px}
-.history ol{margin:0;padding-left:1.4em;color:var(--muted)}
-.history li span{color:var(--ink)}
-.record{margin-top:10px;font-size:.85rem;color:var(--muted)}
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:16px;padding:18px}
+.card h2{font-size:1.15rem;margin:0 0 8px}
+.muted{color:var(--muted)}
+.primary{width:100%;padding:13px 0;border-radius:12px;border:1.5px solid var(--ink);background:var(--accent);color:#1D2840;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit}
+.ghost{width:100%;padding:12px 0;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:.95rem;cursor:pointer;font-family:inherit;margin-top:10px}
+input.code{width:100%;border:1.5px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink);font-size:1.25rem;padding:10px 12px;letter-spacing:.08em;text-transform:uppercase;margin:4px 0 10px}
+.err{color:var(--err);font-size:.85rem;min-height:1.4em;margin:6px 0 0}
+.progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin:0 0 14px}
+.progress span{display:block;height:100%;background:var(--accent);transition:width .25s}
+.qnum{font-size:.85rem;color:var(--muted);margin-bottom:4px}
+.qtext{font-size:1.08rem;font-weight:700;margin:0 0 14px}
+.opt{display:block;width:100%;text-align:left;padding:12px 14px;margin:0 0 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font-size:.98rem;cursor:pointer;font-family:inherit;line-height:1.5}
+.opt:hover{border-color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.typename{font-size:2rem;font-weight:800;margin:2px 0 4px}
+.tagline{font-size:1rem;margin:0 0 14px}
+.bars{margin:6px 0 4px}
+.bar{display:grid;grid-template-columns:5.5em 1fr 3em;align-items:center;gap:8px;font-size:.88rem;margin:6px 0}
+.bar .track{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar .fill{height:100%;border-radius:99px}
+.sec{margin-top:16px}
+.sec h3{font-size:1rem;margin:0 0 6px}
+.sec p{margin:0 0 8px}
+.sec ol{margin:0;padding-left:1.3em}
+.sec li{margin:0 0 6px}
+.formula{font-family:"SF Mono",Menlo,monospace;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
+.note{font-size:.82rem;color:var(--muted);margin-top:16px}
 [hidden]{display:none !important}
 </style>
 </head>
 <body>
 <main>
-  <h1>偏硬币下注</h1>
-  <p class="lede">这枚硬币有 60% 的概率出正面。你有 $25 和 100 次下注机会，资金到 $250 封顶。每次押多少，由你决定。</p>
+  <h1>交易性格测试</h1>
+  <p class="lede">12 道决策题，测出你面对机会和风险时的仓位性格，附完整解读报告。</p>
 
-  <section class="board gate" id="gate">
+  <section class="card" id="gate">
     <h2>输入激活码</h2>
-    <p>购买后你会收到一个激活码。解锁一次，在这台设备上可以一直玩。</p>
-    <label for="code" class="sr">激活码</label>
-    <input id="code" class="num" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例如 ABCD-EFGH" maxlength="12">
+    <p class="muted">购买后会收到一个激活码。解锁一次，同一台设备可以反复测试。</p>
+    <input id="code" class="code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例如 ABCD-EFGH" maxlength="12" aria-label="激活码">
     <button type="button" class="primary" id="unlock">解锁</button>
     <p class="err" id="gateErr" role="alert"></p>
   </section>
 
-  <section class="board" id="board" hidden>
-    <div class="top">
-      <div class="coin"><div class="coin-inner num" id="coin">60%</div></div>
-      <div>
-        <div class="bank-label">当前资金</div>
-        <div class="bank num" id="bank" aria-live="polite">$25.00</div>
-        <div class="meta"><span id="count">第 0 / 100 次</span><span class="last" id="last" aria-live="polite"></span></div>
-      </div>
-    </div>
-
-    <svg class="chart" id="chart" viewBox="0 0 300 116" role="img" aria-label="资金曲线"></svg>
-
-    <div id="play">
-      <label for="amount">这次押多少</label>
-      <div class="amt"><span class="num">$</span><input id="amount" class="num" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="输入金额"></div>
-      <div class="chips" id="chips" aria-label="按当前资金比例快速填写">
-        <button type="button" data-f="0.05">5%</button>
-        <button type="button" data-f="0.1">10%</button>
-        <button type="button" data-f="0.2">20%</button>
-        <button type="button" data-f="0.5">50%</button>
-        <button type="button" data-f="1">全部</button>
-      </div>
-      <div class="bets">
-        <button type="button" id="betH">押正面</button>
-        <button type="button" id="betT">押反面</button>
-      </div>
-      <p class="err" id="err" role="alert"></p>
-    </div>
-
-    <div class="result" id="result" hidden>
-      <h2 id="resultTitle">这局结束了</h2>
-      <table><tbody id="rows"></tbody></table>
-      <p class="lesson" id="lesson"></p>
-      <button type="button" class="primary" id="again">再来一局</button>
-    </div>
+  <section class="card" id="intro" hidden>
+    <h2>开始之前</h2>
+    <p class="muted">没有标准答案，按你真实会做的选。全程约 2 分钟。</p>
+    <button type="button" class="primary" id="start">开始测试</button>
+    <button type="button" class="ghost" id="lastBtn" hidden>查看上次结果</button>
   </section>
 
-  <div class="history" id="history" hidden>
-    <h3>最近 10 局</h3>
-    <ol id="histList"></ol>
-    <p class="record" id="record"></p>
-  </div>
+  <section class="card" id="quiz" hidden>
+    <div class="progress"><span id="prog"></span></div>
+    <div class="qnum" id="qnum"></div>
+    <p class="qtext" id="qtext"></p>
+    <div id="opts"></div>
+  </section>
 
-  <details>
-    <summary>规则</summary>
-    <p>输入金额，选择押正面或反面。押中赢得同样的金额，押错输掉下注额。</p>
-    <p>100 次用完、资金到 $250 或输光时，这局结束。每局的硬币序列都是新的随机结果。</p>
-    <p>这个游戏来自 2016 年的一个真实实验：61 位受过量化训练的年轻人玩了同样的游戏，大约三成把 $25 输光了。</p>
-  </details>
+  <section class="card" id="result" hidden aria-live="polite">
+    <div class="muted">你的交易性格</div>
+    <div class="typename" id="rName"></div>
+    <p class="tagline" id="rTag"></p>
+    <div class="bars" id="rBars"></div>
+    <div class="sec"><h3>画像</h3><p id="rPortrait"></p></div>
+    <div class="sec"><h3>你的优势</h3><p id="rPro"></p></div>
+    <div class="sec"><h3>你的风险</h3><p id="rCon"></p></div>
+    <div class="sec"><h3>放到真实交易里</h3><p id="rMarket"></p></div>
+    <div class="sec"><h3>给你的 3 条仓位原则</h3><ol id="rRules"></ol></div>
+    <div class="sec">
+      <h3>延伸知识：凯利公式</h3>
+      <p>当一个机会赢了赚投入额的 b 倍、输了亏掉投入额，胜率为 p 时，长期增长最快的固定投入比例是：</p>
+      <div class="formula">投入比例 = p − (1 − p) ÷ b</div>
+      <p>例如胜率 60%、盈亏 1:1，投入比例是 0.6 − 0.4 = 20%。投入超过它，长期增长反而变慢；超过两倍左右，长期几乎不增长。现实中胜率是估出来的，很多专业人士只用一半。</p>
+    </div>
+    <button type="button" class="primary" id="again">重新测试</button>
+    <p class="note">本测试仅供学习和娱乐，不构成投资建议。</p>
+  </section>
 </main>
 
 <script>
 (() => {
-  const N = 100, START = 25, CAP = 250, P = 0.6;
   const SALT = 'cf-v2-';
   const VALID = new Set(["00b0f2f4fe59f4028313c40b", "00c84abadd2edce60b4840eb", "0104156ee1860fee9d2f9aea", "013a2835444ff32327307614", "0170531e53fbf4c1e566db91", "01eba8bfad6470bef5f563b2", "033029c09ff938afc8cec5ee", "038881149909542860022d2f", "05d3a8f9de49ffb94668fa8d", "0788dfd0ad347a1ba35eb653", "07bb795a9c7ed2d3dcec65b7", "083acb5fcd7918776318799c", "0875191fd1e341fc5b96ceab", "08fd5f7d3f9503712af2584f", "0903a5a5a902f8f456cf8461", "0a4594b5879d7743d834faca", "0b46e4c97900d421b15bc923", "0c2c9c2f6e85ad5610bd04b0", "0cb3dfc5be9dcc729d188903", "0d02220daae4050abe2aec7c", "0d759865a1197dbe52df9a30", "0ddb7c8a10822b4b469a1a65", "0df1d529ab068bd38502f551", "112b6df6d0d2d8d6a14cb733", "120fd720ea42e69a6253446d", "13c80b643c39869c0c6c526b", "1474c6778a4771bcfb3dcbd7", "15a48124221cae9ba997b4ec", "16bbbdcbdb895867896a1a28", "16c0aa414c0767836a77ff07", "17d7867596756b55bfb15e37", "17fbd36149c364c9d154195d", "18f5f4cb73a916a47918ebb0", "19b720bcf4e5a7b2861b75d5", "1ae6a0055710c93c135aceb6", "1c16f99709f607c83cbbb238", "1c5dc3af26957633f0b56fb4", "1cbd04afac7318b9b6b2b926", "2008f83840343176c3ec80e8", "20b06656013f624f75d829e3", "23fc1c7c8c4d3a89200bade3", "240d5a2d21491e8c8c9ae777", "257699d910767d382be8c0de", "26802b217df4482dbc5e4c73", "28184ff081818efb9576640a", "2888a4b9dc715d2d75515dca", "28ef200e631a7047e65b75c1", "299ead945c36a170d36e4267", "2b3aa1879c80e94f2f647d02", "2dc826518d0ee245ef70c3ae", "2ef37923a34a45db9d7b4402", "2fd9b23f627bf483c210d3e2", "3013e09518b041fdb07b490f", "30e312b629ac4c7c3796237e", "31f25e9f5368e66b9538e5c0", "32918b60f17a0298ec6c4f0a", "3293ca4b4e79ff4f69f0b634", "32b32733fa459d3b7bd9e20c", "32feb59989490d1531c54b10", "3351454a730e5c7d40f99e77", "354aae82d474b5abb9852548", "35cc27a60e4018bae493526b", "35f315d8fec19d955ff69b0c", "37b2cf2d8dbeabfe1b3c0c68", "382fe7873f6a82535bb2b991", "38e5e4ecd9ac25458e5669ae", "3a24e98d38c6bb43d20547f4", "3a810ace9dc8ab4d466216ea", "3b87ec90b4f2d11ef750e563", "3c7eb029887b6a17cd896652", "40a680f06d9498e3a6ac11f0", "423bc1c86763cae9f817d0ca", "4415200fb761ee5b324e66bb", "44dcce6f6abac616a44c54d6", "457482fe6e01b36ee77460cc", "45aca1b6299fc981dc54a4e8", "46533d1fb00bf7bbc4f6b426", "46587881c273ca2d94faeb42", "4741fef4185ba2b9c1234232", "47c81266cd16401b2c815f7c", "492b2c111894f94de3a5b03b", "494abda589861bf06f8bb39d", "4a1b9d8cd4d73fbe6b9eefb0", "4a79d01cd554e7f1011b1f87", "4b21b0c156276768345d8894", "4b35f85b40823d991de4c821", "4d2bde4b3b9ae725b6c07dab", "4dc3a83b237891595fb50ddb", "4e7a94d569c3f8a5d630fa3e", "4eb84b26b995d20bcd63241d", "4ebdf15f451279d3f79363b0", "4ff51e0f1521547fe4e6d417", "5020fb0b430179fe38b27042", "514f758f76f4fb82d64bdd55", "5195281b234901dc3f171198", "528a5ed425161df113aef72b", "53bcfd5157e5b7c9008f61c6", "53e7f10662ae8313a867c035", "5410752aa0798e7535bb5e8d", "54e5de6f781d1b4abf8cbe18", "560cd25db89d02e42cc08bd0", "560d4086411d6fb8325269ef", "56cbc3d53358186f82c8ed16", "58fe24ba1e3d3591658f16eb", "590c7f0c60b81a9b17ec0c58", "594540027047a92906e51950", "59e1cf5b1aba51161a433383", "5a7720f125161959763ac954", "5ac4dc06e769b85e71ad60b5", "5ba052c3d250783a3e69445b", "5bea96e92b5962930569ae01", "5dc44b641e4d45e97e3389a4", "5df4c1211b7f2f03a44413f9", "5ee455f0dd2d874fadc0846d", "60002a8d35491a569290e7be", "614d431bdcb708aab2a73fb0", "616cd51097969d864728d292", "62919a01f7f40aa708a6d87f", "65d2bb1a77af481c6d2ecf84", "660116539c368f102f324818", "667de38e84f8ed625f97d5bf", "684b6f983c6aac74b5ab0ef4", "68f7d589bbd5c0c8bb4f9c8d", "69995316bd7faf5c66258403", "69cc7b678e29f3fc941821e1", "69e440888521382b9ff2ad5a", "6cfd96e6965c57fe97688573", "6d10542e19812d5cf940027e", "6e6eca382c1ae4876fa42ec7", "6f59e17d210c16f41d712493", "6f83de3a2943fc64348681ec", "70814241ba34d5601485e256", "711a6bc84b2417ba3a7353fd", "711d8bcea576feb2f0fde8e8", "71640aa8d25ae9cedd087a15", "720e6ef07accafbd31c940ae", "72c5ba503e6278f7f428d6bf", "73593b82f6c2561df6f2b742", "73883ff942796651cb729a83", "7497fdd88dbaa44b54a01105", "750aebbb452e0afa8038e74b", "7521824c54465063ecf00db6", "7640730a3198e27ae550b038", "76990308f38afe1cc9183cd3", "76b05b609f604671406fabd5", "76cf1ee463d538c163b4e54b", "791bb042993469988df1a66b", "79766c780efe78b098d79ea1", "7aae75e96f24e570de3a2efc", "7b03bd85172f98da875318a6", "7b0b68b09bad344abc570aaa", "7bc76e3eb30b49165ee6d07d", "7bd30d1396ef07ba686b9312", "7bf58d080d485b68d6405405", "7d84225d27396abdec4a3700", "7deae2b85961b33c569b86a0", "7e075b7d0f8bcc0b1bb4b546", "7f34e39522d8757c9b8f5079", "7f4990847734a61f29122c6b", "7f5198ab114a94b4d1d194ad", "7fb4675a9f5f2e04f2e918c1", "8057af1bd7580a50fe9426f8", "80da39d615e0ed1ca1c8972b", "81b2534800126935e8313970", "81b35df532afa62025a063be", "824d8d1ff781c20543f4ed18", "8282c113e5d578e9221b8e3d", "831ba25f9ff9e8ddee8ac4f0", "845295a0e740cf1f79b9e1ed", "848bd9426af35977712dce47", "85f72ea6ee0db5536dd97a72", "86649b0c1fe0fbc56f835a4b", "87766010345ee35820e6a283", "8935f92987a84257e3d8e486", "89a9ebb865f1d5e0cbd65d14", "8b97b3d6e26c2dd767122115", "8c3ce72fb6ec20f4c74a59ca", "8ecd2fa882d86f834b420ad6", "8efd8161e8d8c170337f4c11", "90d43acaf81cdb66b7f0f813", "916bfc38f39c0db9aa7d0724", "936a094a0e82fcc92963f9d2", "93b482243797f5783ba2ea6e", "9488299b0b956258eb887fd8", "963dbd9fc762dde87f33eb39", "967e9573d3c9126cefd24570", "96c9dcf3fd993e08bbbdf79b", "99eb352ab94a871b675b9c08", "9a2427b8bd746c7be267c45f", "9a276a02bf95b7108b2e5263", "9a6efba3530e605a0c5e5e66", "9b4639ae8b9b74480d165bf3", "9b6cb6fef5ef303e9c1dc0a3", "9b715dcc9e015ce95c85ddd0", "9ca30965f8cc10b28b49db88", "9d954ed81242320c5a5be86f", "9eabede475c2e04af9b8a00e", "9f35f3e97b58aa2f02f108cf", "9fae23e5b8078b13753626cf", "a10ea4709a50ea075279e821", "a24500826c6e0d5c88bedd8c", "a2bf5f1b712e51d8cd1f9918", "a40477cd50b2df2c1ac58ef0", "a4b2ea19fe6f2dfd8fa26da9", "a76be8c23b1026a81bc509dc", "a8a5217240ba6f2d4bb26885", "aaa1334b4c2e220bf57e0844", "ab5297baf653851e7781faae", "ab67de49caf0e86c69c17d11", "abbcb7b438bb811d49707eb9", "ac251583000a801978493629", "ac901ec7b5fa6df37290ddba", "acc9ae7cedfde410789c84b7", "ad9888f79cdf2e22f7ea52c3", "ae2aa29a53dd5fe909fc3aa6", "aed49460a293a8f4941b7ff1", "aed735d053eae7935f91f46c", "b0afc22cb4878706330ce2d6", "b0beca9ec73e3f9bfeaca5ba", "b1af2828b2d3743f096786f9", "b348f5be57f6174f8537c900", "b3ae8905862eabd0f37eb63f", "b3bc939af45171643f7432c3", "b41dced6b6bfd106ca0f65db", "b71df0896e7e68abdd167c9e", "b73ff9ad03b13dcc438fcd4d", "b91771534e2c0fe1d69661ad", "b9af9354dffab1aba344bb09", "ba4954628d4e97a82d50fed4", "bb3a36eb0e4aafc6541f084f", "bcd9fa4e2ca628416931a86e", "bd882a55fc9419d9350e148b", "bda3f6c234dfca72159389e7", "bef3a44a2c6c8a254df14923", "bf2f6275a8f7d6091e185c5d", "bf428f51967558b7bcf6a5ec", "c02c6ce2917b73efca851bbf", "c07adc08fbccce294f9f8199", "c0908d4105fbb15e2220ebaf", "c5250760ec0ad9807da54a87", "c83ddc62a5516ff85957f1b0", "ca2d481f7a6a89d828ecf5bf", "cb2195d05216954bb6073d31", "cc396173240f2ecc8cc73b13", "cd1d2e892e0f49acc1ffae04", "cd43a229a785c6916cfd8f37", "cd9db2086c74a936eed9dd8d", "cea608e002e0708d63b15354", "cfe35182dfbc24e6fe48d576", "d05614dffc7171af4a4141d8", "d1293f2c52a82b55a2042f8c", "d1ef45cc204d1a7e8995ac98", "d216a202e5a8bc29b622fa85", "d26d51b1278fa95b1e5744a6", "d342150fd44e42843001243d", "d4dc1d209dcabb5a6d34d55f", "d511687d6685466a5f038043", "d5a420de5418ac2e2176a960", "d5e50818ee3642f92f380f84", "d632334c98d336b675b758c4", "d7247dc7480480ba4a5b6a09", "d7d8f5e7e162becbd0a30d91", "d82f8b4e092bac1b7a019b9d", "d8c84adb467c641316c0f948", "d91c36f2621487233a713daa", "d95eb339e1f4e77af7da7c20", "dd3df1a5baff7ceac0e244d7", "de24c5728ec438d375f9c1b2", "de79561d08ccb9473169568f", "df39e1e3eb8d7a4d90976cf8", "df7a99d0e515a6227a7efb66", "e03819457ac15ae349254353", "e16722f51c2943e210297559", "e27cacded6ae3e76dca8850d", "e345718595c807ddab7c2e06", "e41d0bc843211b978918a5bd", "e51bcf45e16b1a700f970e75", "e51caee2a8eab0e3050aaf94", "e53850ab7a6fb6834685697d", "e608e4f01fde1ffc80077d14", "e703adb955b2b1938b2ebe4c", "e92e4084a39370243e8e173c", "ec18a3f4ed01202e6c73bce6", "ec6a781bba36ca66b0bdcc30", "ed44289f6454951834050afa", "eea62470dc784b9368d30c98", "f0372f3f88437fa201109ef4", "f18865a937813c1797099267", "f22b291385987f8d1ee6a965", "f290fb5f34b23aa080be1c63", "f38de78a00006a0aad81b509", "f497c5beb39c0bdd46ddf198", "f60b5279456a314b58bf3d53", "f6c1d7d233301a2a89f87a6b", "f70e11bb1160c840071fac8f", "fa7d778e964254dffac10b42", "fbf170c1bd87aced17c6f35b", "fcb1696e135a4f8f206e31ce", "fe2b931ec44c7d7257ba3c9a", "fe6fb1ab2b0177e4339728fd"]);
-  const KEY_UNLOCK = 'coinflip-v2-unlock', KEY_STATS = 'coinflip-v2-stats';
+  const KEY_UNLOCK = 'tptest-unlock', KEY_LAST = 'tptest-last';
   const $ = (id) => document.getElementById(id);
-  const fmt = (x) => '$' + x.toFixed(2);
-  const r2 = (x) => Math.round(x * 100) / 100;
-  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let seq, i, bank, path, fracs, over, peak, maxDD;
 
-  // SHA-256 for ASCII strings (works without a secure context)
+  const TYPES = {
+    A: { name: '稳健守护型', color: 'var(--a)', tag: '先活下来，再谈赚钱。',
+      portrait: '你把保住本金放在第一位。面对机会，你习惯先想最坏情况，再决定投多少。你很少冲动，也很少后悔。',
+      pro: '回撤小，心态稳。市场剧烈波动时，你往往是最不慌的那个人。',
+      con: '在真正有优势的机会面前，你也只投很少。长期看，过度保守和过度激进一样会损失增长：胜率 60%、盈亏 1:1 的机会，每次只投 5%，增长速度不到每次投 20% 的一半。',
+      market: '你适合指数和分散配置，不容易被一次失误打垮。需要注意的是，"不亏"不是目标，"在可承受的回撤内尽量增长"才是。',
+      rules: ['对每个机会先估计胜率和盈亏比，再决定比例，而不是一律投最少。', '给自己设一个下限：有把握的机会，至少投到计算比例的一半。', '用"最大回撤不超过多少"来约束自己，替代"不能亏"。'] },
+    B: { name: '纪律复利型', color: 'var(--b)', tag: '赚钱靠规则，不靠感觉。',
+      portrait: '你相信规则胜过直觉。投入多少由胜率和盈亏比决定，而不是由心情和最近的输赢决定。',
+      pro: '这是最接近长期增长最快的做法：按固定比例投入，比例由优势大小决定。你的结果更多取决于规则本身，而不是运气。',
+      con: '规则里的胜率是估出来的。估得太乐观时，固定比例也会变成过度投入。另外，过于相信模型，可能让你忽视规则失效的信号。',
+      market: '你适合系统化交易：先写规则、再回测、再执行。你最大的敌人不是情绪，而是自己高估了优势。',
+      rules: ['胜率不确定时，按悲观的估计打折，比如只用计算比例的一半。', '定期复盘：规则的实际胜率和当初假设差多少。', '记录每一次决策和理由，用数据而不是感觉修改规则。'] },
+    C: { name: '冲锋进攻型', color: 'var(--c)', tag: '机会难得，要抓就抓大的。',
+      portrait: '你行动力强，看准了就敢重仓。你相信大的回报需要大的投入。',
+      pro: '执行力强，抓得住大机会，不容易错过行情。',
+      con: '投入比例过高时，即使胜率占优，长期也会被几次连续失误拖垮。胜率 60%、盈亏 1:1，每次投入一半资金：赢一次再亏一次，只剩原来的 75%。很多看起来占优的人，最后输在比例上，而不是方向上。',
+      market: '你要警惕杠杆和集中持仓。在真实市场里，连续判断错误比你想象的更常见。',
+      rules: ['给单次投入设硬上限，比如不超过总资金的 20%。', '永远不要一次投入全部资金，留出犯错和翻身的余地。', '下单前先写下最坏情况和你能承受的亏损。'] },
+    D: { name: '情绪追随型', color: 'var(--d)', tag: '手感好就加，状态差就想马上扳回来。',
+      portrait: '你的决策很受最近结果影响：顺的时候加大投入，不顺的时候想尽快赚回来。你对市场情绪很敏感。',
+      pro: '反应快，对变化敏感，能感知到市场氛围的转变。',
+      con: '如果每次结果是独立的，连续盈利并不会提高下一次的胜率，连续亏损也不会。根据最近输赢调整投入，只会让比例忽大忽小，长期增长被拖慢，还容易在最差的时刻投入最多。',
+      market: '"赚了加仓、亏了想翻本"是最常见的交易习惯之一。你最需要的不是更好的判断，而是一套不受情绪影响的仓位规则。',
+      rules: ['投入比例只由胜率和盈亏比决定，与最近的输赢无关。', '连续亏损 3 次后强制暂停一天，复盘后再继续。', '写交易日志，标出每次加大投入时的情绪。'] }
+  };
+
+  const Q = [
+    ['一个机会：60% 的概率赚到投入额，40% 的概率亏掉投入额，可以重复参与。你每次愿意投入资金的多少？',
+      [['5% 左右，先稳住', 'A'], ['20% 左右，算过之后定一个固定比例', 'B'], ['一半以上，机会难得', 'C'], ['先小试几次，顺手了再加', 'D']]],
+    ['连续 3 次判断正确之后，你下一次会？',
+      [['按原来的比例继续', 'B'], ['稍微减一点，见好就收', 'A'], ['明显加大，趁状态好', 'D'], ['直接加到最大', 'C']]],
+    ['连续 3 次判断错误之后，你下一次会？',
+      [['按原来的比例继续，规则不变', 'B'], ['先停一段时间，等心态恢复', 'A'], ['加大投入，尽快把亏的赚回来', 'D'], ['投入全部资金，争取一次扳回', 'C']]],
+    ['一个胜率 80% 的机会，但你只能参与一次。你会？',
+      [['投入一小部分', 'A'], ['按胜率和盈亏比算出比例再投', 'B'], ['投入大部分资金', 'C'], ['看最近运气好不好再决定', 'D']]],
+    ['你的账户一周内从 100 涨到 150，你会？',
+      [['把一部分收益转出来，锁定利润', 'A'], ['按新的资金量，同比例继续', 'B'], ['提高投入比例，趁势而上', 'C'], ['开始频繁看行情，想再快一点', 'D']]],
+    ['你的账户从 100 跌到 70，你会？',
+      [['降低投入，先保住本金', 'A'], ['检查规则有没有问题，没问题就继续', 'B'], ['换一个更激进的方法', 'C'], ['忍不住加仓，想马上赚回来', 'D']]],
+    ['有人告诉你某个机会"稳赚不赔"，你会？',
+      [['不碰，看不懂的不做', 'A'], ['先查清楚胜率和最坏情况', 'B'], ['先参与再说', 'C'], ['看身边有多少人在做', 'D']]],
+    ['你更认同哪句话？',
+      [['先活下来，再谈赚钱', 'A'], ['赚钱靠规则，不靠感觉', 'B'], ['富贵险中求', 'C'], ['市场情绪就是最好的信号', 'D']]],
+    ['制定好计划之后，实际执行时你通常？',
+      [['会执行，但比计划更保守', 'A'], ['基本按计划执行', 'B'], ['经常比计划更大胆', 'C'], ['看当天心情和行情调整', 'D']]],
+    ['一笔投资亏了 20%，你会？',
+      [['止损离场', 'A'], ['按事先设定的条件处理', 'B'], ['继续加仓，摊低成本', 'C'], ['一直拿着，等它涨回来', 'D']]],
+    ['如果有一个工具每天告诉你该投入多少，你会？',
+      [['按它说的再减一点', 'A'], ['弄懂它的逻辑后照做', 'B'], ['觉得太保守，自己加码', 'C'], ['赚钱时照做，亏钱时就不听了', 'D']]],
+    ['你最怕哪种情况？',
+      [['本金大幅缩水', 'A'], ['违背了自己定的规则', 'B'], ['错过一次大机会', 'C'], ['别人都赚了只有我没赚', 'D']]],
+  ];
+
   function sha256(ascii) {
     const rr = (v, a) => (v >>> a) | (v << (32 - a));
     const maxWord = 2 ** 32, H = [], K = [];
-    let primeCounter = 0; const isComp = {};
-    for (let c = 2; primeCounter < 64; c++) {
-      if (!isComp[c]) {
-        for (let m = 0; m < 313; m += c) isComp[m] = c;
-        if (primeCounter < 8) H[primeCounter] = (c ** 0.5 * maxWord) | 0;
-        K[primeCounter++] = (c ** (1 / 3) * maxWord) | 0;
+    let pc = 0; const comp = {};
+    for (let c = 2; pc < 64; c++) {
+      if (!comp[c]) {
+        for (let m = 0; m < 313; m += c) comp[m] = c;
+        if (pc < 8) H[pc] = (c ** 0.5 * maxWord) | 0;
+        K[pc++] = (c ** (1 / 3) * maxWord) | 0;
       }
     }
     const bitLen = ascii.length * 8;
@@ -201,137 +204,79 @@ details p{margin:8px 0}
     for (let t = 0; t < 8; t++) for (let b = 3; b >= 0; b--) { const v = (hash[t] >> (b * 8)) & 255; out += (v < 16 ? '0' : '') + v.toString(16); }
     return out;
   }
-  window.__sha256 = sha256;
-
   const norm = (s) => s.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  const checkCode = (s) => { const c = norm(s); return c.length === 8 && VALID.has(sha256(SALT + c).slice(0, 24)); };
+  const hashOf = (s) => sha256(SALT + norm(s)).slice(0, 24);
 
-  function isUnlocked() {
-    try { const v = localStorage.getItem(KEY_UNLOCK); return !!v && VALID.has(v); } catch (e) { return false; }
-  }
-  function saveUnlock(code) {
-    try { localStorage.setItem(KEY_UNLOCK, sha256(SALT + norm(code)).slice(0, 24)); } catch (e) {}
-  }
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
 
-  function loadStats() {
-    try {
-      const s = JSON.parse(localStorage.getItem(KEY_STATS));
-      if (s && Array.isArray(s.recent)) return s;
-    } catch (e) {}
-    return { games: 0, best: 0, busts: 0, caps: 0, recent: [] };
-  }
-  function saveStats(s) { try { localStorage.setItem(KEY_STATS, JSON.stringify(s)); } catch (e) {} }
+  let qi = 0, score = { A: 0, B: 0, C: 0, D: 0 };
 
-  function pts(arr) {
-    return arr.map((v, k) => `${(k / N * 300).toFixed(1)},${(110 - v / CAP * 100).toFixed(1)}`).join(' ');
-  }
-  function drawChart() {
-    const yCap = 10, y25 = 110 - START / CAP * 100;
-    $('chart').innerHTML =
-      `<line class="g" x1="0" x2="300" y1="${yCap}" y2="${yCap}"/><text class="ax" x="2" y="${yCap - 3}">$250 封顶</text>` +
-      `<line class="g" x1="0" x2="300" y1="${y25}" y2="${y25}"/><text class="ax" x="2" y="${y25 - 3}">$25 起点</text>` +
-      `<line class="base" x1="0" x2="300" y1="110" y2="110"/>` +
-      `<polyline class="p-you" points="${pts(path)}"/>`;
+  function show(id) { ['gate', 'intro', 'quiz', 'result'].forEach(x => $(x).hidden = x !== id); window.scrollTo(0, 0); }
+
+  function renderQ() {
+    const [text, opts] = Q[qi];
+    $('prog').style.width = `${(qi / Q.length) * 100}%`;
+    $('qnum').textContent = `第 ${qi + 1} / ${Q.length} 题`;
+    $('qtext').textContent = text;
+    $('opts').innerHTML = '';
+    opts.forEach(([label, t]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt'; b.textContent = label;
+      b.addEventListener('click', () => { score[t] += 1; qi += 1; qi < Q.length ? renderQ() : finish(); });
+      $('opts').appendChild(b);
+    });
   }
 
-  function renderHistory() {
-    const s = loadStats();
-    $('history').hidden = s.games === 0;
-    $('histList').innerHTML = s.recent.slice().reverse().map(r =>
-      `<li><span class="num">${fmt(r.v)}</span>，${r.end}，平均每次押 ${r.f}%</li>`).join('');
-    $('record').textContent = s.games ? `共 ${s.games} 局，封顶 ${s.caps} 次，输光 ${s.busts} 次，最好成绩 ${fmt(s.best)}。` : '';
+  function pickType(s) {
+    const order = ['B', 'A', 'D', 'C'];
+    return order.reduce((best, t) => (s[t] > s[best] ? t : best), order[0]);
   }
 
-  function render() {
-    $('bank').textContent = fmt(bank);
-    $('count').textContent = `第 ${i} / ${N} 次`;
-    drawChart();
+  function renderResult(s) {
+    const t = pickType(s), T = TYPES[t], total = Q.length;
+    $('rName').textContent = T.name; $('rName').style.color = T.color;
+    $('rTag').textContent = T.tag;
+    $('rBars').innerHTML = ['A', 'B', 'C', 'D'].map(k => {
+      const pct = Math.round(s[k] / total * 100);
+      return `<div class="bar"><span>${TYPES[k].name}</span><span class="track"><span class="fill" style="width:${pct}%;background:${TYPES[k].color}"></span></span><span>${pct}%</span></div>`;
+    }).join('');
+    $('rPortrait').textContent = T.portrait;
+    $('rPro').textContent = T.pro;
+    $('rCon').textContent = T.con;
+    $('rMarket').textContent = T.market;
+    $('rRules').innerHTML = T.rules.map(r => `<li>${r}</li>`).join('');
+    show('result');
   }
 
-  function flip(isH) {
-    const c = $('coin');
-    c.textContent = isH ? '正' : '反';
-    if (!reduce && c.animate) c.animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(720deg)' }], { duration: 420, easing: 'cubic-bezier(.3,.7,.3,1)' });
+  function finish() {
+    $('prog').style.width = '100%';
+    store.set(KEY_LAST, JSON.stringify(score));
+    renderResult(score);
   }
 
-  function place(heads) {
-    if (over) return;
-    const v = parseFloat($('amount').value);
-    if (!(v >= 0.01)) { $('err').textContent = '先输入下注金额，最少 $0.01。'; return; }
-    if (v > bank + 1e-9) { $('err').textContent = `最多只能押 ${fmt(bank)}。`; return; }
-    $('err').textContent = '';
-    const bet = r2(v), isH = seq[i], win = isH === heads;
-    fracs.push(bet / bank);
-    bank = r2(Math.min(CAP, bank + (win ? bet : -bet)));
-    i++; path.push(bank);
-    peak = Math.max(peak, bank);
-    maxDD = Math.max(maxDD, peak > 0 ? (peak - bank) / peak : 0);
-    flip(isH);
-    const l = $('last');
-    l.textContent = `${isH ? '正面' : '反面'}，${win ? '+' : '−'}${fmt(bet)}`;
-    l.className = 'last ' + (win ? 'gain' : 'loss');
-    if (parseFloat($('amount').value) > bank) $('amount').value = bank > 0 ? bank.toFixed(2) : '';
-    if (bank < 0.01 || bank >= CAP || i >= N) end();
-    render();
-  }
+  function startQuiz() { qi = 0; score = { A: 0, B: 0, C: 0, D: 0 }; show('quiz'); renderQ(); }
 
-  function end() {
-    over = true;
-    $('play').hidden = true;
-    const avg = fracs.length ? fracs.reduce((a, b) => a + b, 0) / fracs.length : 0;
-    const pct = Math.round(avg * 100);
-    const endWord = bank < 0.01 ? '输光' : (bank >= CAP ? '封顶' : '100 次用完');
-    $('resultTitle').textContent = bank < 0.01 ? '你输光了' : (bank >= CAP ? '你赢到了 $250 封顶' : '100 次用完了');
-    $('rows').innerHTML = [
-      ['最终资金', fmt(bank)],
-      ['下注次数', `${i} 次`],
-      ['平均每次押当前资金的', `${pct}%`],
-      ['最大回撤', `${Math.round(maxDD * 100)}%`],
-    ].map(([a, b]) => `<tr><td>${a}</td><td class="num">${b}</td></tr>`).join('');
-    $('lesson').textContent = '想一想：你的押注比例和这局的结果之间有什么关系？';
-    $('result').hidden = false;
-    const s = loadStats();
-    s.games += 1;
-    s.best = Math.max(s.best, bank);
-    if (bank < 0.01) s.busts += 1;
-    if (bank >= CAP) s.caps += 1;
-    s.recent.push({ v: bank, end: endWord, f: pct });
-    s.recent = s.recent.slice(-10);
-    saveStats(s);
-    renderHistory();
-  }
-
-  function newGame() {
-    seq = Array.from({ length: N }, () => Math.random() < P);
-    i = 0; bank = START; path = [START]; fracs = []; over = false; peak = START; maxDD = 0;
-    $('result').hidden = true; $('play').hidden = false;
-    $('last').textContent = ''; $('last').className = 'last';
-    $('coin').textContent = '60%'; $('err').textContent = ''; $('amount').value = '';
-    render();
-  }
-
-  function showGame() {
-    $('gate').hidden = true; $('board').hidden = false;
-    newGame(); renderHistory();
+  function toIntro() {
+    const last = store.get(KEY_LAST);
+    $('lastBtn').hidden = !last;
+    show('intro');
   }
 
   $('unlock').addEventListener('click', () => {
     const v = $('code').value;
-    if (checkCode(v)) { saveUnlock(v); $('gateErr').textContent = ''; showGame(); }
+    if (norm(v).length === 8 && VALID.has(hashOf(v))) { store.set(KEY_UNLOCK, hashOf(v)); $('gateErr').textContent = ''; toIntro(); }
     else $('gateErr').textContent = '激活码不正确。请检查是否少了字符，横杠可以不输。';
   });
   $('code').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('unlock').click(); });
-  $('chips').addEventListener('click', (e) => {
-    const f = e.target.dataset && e.target.dataset.f;
-    if (!f || over) return;
-    $('amount').value = (Math.floor(bank * parseFloat(f) * 100) / 100).toFixed(2);
-    $('err').textContent = '';
-  });
-  $('betH').addEventListener('click', () => place(true));
-  $('betT').addEventListener('click', () => place(false));
-  $('again').addEventListener('click', newGame);
+  $('start').addEventListener('click', startQuiz);
+  $('again').addEventListener('click', startQuiz);
+  $('lastBtn').addEventListener('click', () => { try { renderResult(JSON.parse(store.get(KEY_LAST))); } catch (e) { startQuiz(); } });
 
-  if (isUnlocked()) showGame();
+  const saved = store.get(KEY_UNLOCK);
+  if (saved && VALID.has(saved)) toIntro(); else show('gate');
 })();
 </script>
 </body>
